@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consulta de Ações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta de Ações B3</h1>
+        
+        <div class="search-box">
+            <input type="text" id="tickerInput" placeholder="Digite o código (ex: PETR4)">
+            <button onclick="consultarAcao()">Consultar</button>
+        </div>
+
+        <div id="resultado">
+            <div id="dados"></div>
+            <div id="grafico"></div>
+        </div>
+    </div>
+
+    <script>
+        function consultarAcao() {
+            const ticker = document.getElementById('tickerInput').value;
+            const resultado = document.getElementById('dados');
+            const graficoDiv = document.getElementById('grafico');
+
+            fetch('/consulta', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `ticker=${ticker}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    resultado.innerHTML = `<p class="error">Erro: ${data.error}</p>`;
+                    graficoDiv.innerHTML = '';
+                    return;
+                }
+
+                resultado.innerHTML = `
+                    <h2>${data.nome} (${ticker})</h2>
+                    <p>Cotação Atual: R$ ${data.cotacao.toFixed(2)}</p>
+                `;
+
+                graficoDiv.innerHTML = `<img src="data:image/png;base64,${data.grafico}">`;
+            });
+        }
+    </script>
+</body>
+</html>
