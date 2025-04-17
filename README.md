@@ -1,0 +1,1 @@
+Projeto de python com web scrapping e análise de dados que usa um front end de html e css para funcionar na web. Objetivo é automatizar as buscar por valores de ações de empresas e plotar um gráfico com a variação ao longo do tempo
